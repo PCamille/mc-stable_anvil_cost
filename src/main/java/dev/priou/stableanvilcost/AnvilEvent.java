@@ -21,8 +21,7 @@ public class AnvilEvent {
         for (Enchantment enchantment : finalEnchantments.keySet()) {
             if (enchantment.isCurse()) {
                 nbCurses++;
-            }
-            else {
+            } else {
                 int finalLevel = finalEnchantments.get(enchantment);
                 int firstLevel = firstEnchantments.getOrDefault(enchantment, 0);
                 int secondLevel = secondEnchantments.getOrDefault(enchantment, 0);
@@ -37,25 +36,22 @@ public class AnvilEvent {
                 if (firstLevel == secondLevel && finalLevel != firstLevel) {
                     //fusion same level -> cost depends on level and rarity
                     cost += firstLevel * firstLevel * rarity;
-                }
-                else if (isSameObject) {
+                } else if (isSameObject) {
                     //fusion same item -> cost depends on level and rarity, it's low
                     cost += Math.min((rarity * finalLevel) / 2, 1);
-                }
-                else {
+                } else {
                     //fusion with a book
                     if (secondLevel == 0) {
                         //enchant already on the item -> cost depends on level and rarity, it's low
                         cost += Math.min((rarity * finalLevel) / 2, 1);
-                    }
-                    else {
+                    } else {
                         //enchant on the book -> cost depends on the level and the rarity
                         cost += finalLevel * rarity - (rarity * firstLevel) / 2;
                     }
                 }
             }
         }
-        return Math.max(1, (int)(cost - (cost * 0.1 * nbCurses)));
+        return Math.max(1, (int) (cost - (cost * 0.1 * nbCurses)));
     }
 
     @SubscribeEvent
@@ -79,7 +75,6 @@ public class AnvilEvent {
                 int newDamage = currentDamage;
 
                 for (int i = 0; i < secondStack.getCount() && newDamage > 0; ++i) {
-                    cost++; //TODO: remove
                     repairMaterialCost++;
                     newDamage -= repairPerMaterial;
                 }
@@ -88,9 +83,7 @@ public class AnvilEvent {
                 }
                 finalStack.setDamageValue(newDamage);
                 e.setMaterialCost(repairMaterialCost);
-            }
-            else if (isRepairWithSameItem) {
-                cost++; //TODO: remove
+            } else if (isRepairWithSameItem) {
                 int maxDamage = firstStack.getMaxDamage();
                 int currentDamage = firstStack.getDamageValue();
                 int secondDamage = secondStack.getDamageValue();
@@ -137,14 +130,9 @@ public class AnvilEvent {
                 cost += getEnchantCost(finalEnchants, firstEnchants, secondEnchants, isEnchantWithSameItem);
             }
 
-            if (e.getName() == null || e.getName().isBlank() || e.getName().isEmpty()) { //TODO: fix the reset name
-                if (firstStack.hasCustomHoverName()) {
-                    cost++; //TODO: remove
-                    finalStack.resetHoverName();
-                }
-            }
-            else if (!e.getName().equals(firstStack.getHoverName().getString())) {
-                cost++; //TODO: remove
+            if ((e.getName() == null || e.getName().isBlank() || e.getName().isEmpty()) && firstStack.hasCustomHoverName()) {
+                finalStack.resetHoverName();
+            } else if (!e.getName().equals(firstStack.getHoverName().getString())) {
                 finalStack.setHoverName(new TextComponent(e.getName()));
             }
 

@@ -40,8 +40,8 @@ This mod changes the way that anvil costs are calculated.
 - Curses reduce the cost of a fusion.
 - No more penalties applied when you enchant one item multiple times.
 - Remove the cost limitation, no more 'Too expensive' message.
-- Repair an item only cost material and no exp (in progress).
-- Rename an item is free (in progress).
+- Repair an item only cost material and no exp.
+- Rename an item is free.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.stable_anvil_cost]] #optional

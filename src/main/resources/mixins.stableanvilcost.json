@@ -1,0 +1,11 @@
+{
+  "minVersion": "0.8",
+  "required": true,
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "mixins.stableanvilcost.refmap.json",
+  "package": "dev.priou.stableanvilcost.mixins",
+  "mixins": ["AnvilZeroCostMixin"],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
