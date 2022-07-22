@@ -38,8 +38,10 @@ public class AnvilZeroCostMixin {
         String name = self.itemName;
 
 
-        if ((name.isBlank() || name.isEmpty()) && firstStack.hasCustomHoverName()) {
-            finalStack.resetHoverName();
+        if (name == null || name.isBlank() || name.isEmpty()) {
+            if (firstStack.hasCustomHoverName()) {
+                finalStack.resetHoverName();
+            }
         } else if (!name.equals(firstStack.getHoverName().getString())) {
             finalStack.setHoverName(new TextComponent(name));
         }
