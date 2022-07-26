@@ -14,14 +14,6 @@ import java.util.Map;
 
 @Mod.EventBusSubscriber
 public class AnvilEvent {
-    public static int sumFrom1(int max) {
-        int sum = 0;
-        for (int i = 0; i <= max; ++i) {
-            sum += i;
-        }
-        return sum;
-    }
-
     public static int getEnchantCost(Map<Enchantment, Integer> finalEnchantments, Map<Enchantment, Integer> firstEnchantments, Map<Enchantment, Integer> secondEnchantments, boolean isSameObject) {
         int cost = 0;
         int nbCurses = 0;
@@ -41,31 +33,33 @@ public class AnvilEvent {
                     case VERY_RARE -> 8;
                 };
 
+
                 if (firstLevel == secondLevel && finalLevel != firstLevel) {
-                    //fusion same level -> cost depends on level and rarity
-                    cost += sumFrom1(firstLevel) * rarity;
-                } else if (isSameObject) {
-                    //fusion same item -> cost depends on level
-                    cost += finalLevel;
+                    // Fusion two same level enchants
+                    cost += finalLevel * rarity;
                 } else {
-                    //fusion with a book
-                    if (secondLevel == 0) {
-                        //enchant already on the item -> cost depends on level
-                        cost += finalLevel;
-                    } else {
-                        if (secondLevel > enchantment.getMaxLevel()) {
-                            //curse's ancient tomes
-                            cost += 30;
+                    if (firstLevel == 0 || secondLevel == 0) {
+                        // Total new enchant
+                        if (isSameObject) {
+                            cost += finalLevel * rarity;
+                        } else {
+                            // Fusion with a book
+                            if (secondLevel == 0) {
+                                // Enchant on the item
+                                cost += finalLevel * Math.max(rarity / 2, 1);
+                            } else {
+                                // Enchant on the book
+                                cost += finalLevel * rarity;
+                            }
                         }
-                        //enchant on the book -> cost depends on the level and the rarity
-                        cost += sumFrom1(finalLevel) - sumFrom1(firstLevel) * rarity/3.0;
+                    } else {
+                        // Enchant already one the two items
+                        cost += (finalLevel - Math.max(Math.min(firstLevel, secondLevel) / 2, 1)) * rarity;
                     }
                 }
             }
         }
-
-        cost += sumFrom1(Math.min(finalEnchantments.keySet().size() - nbCurses - 1, 0));
-        return Math.max(1, (int) (cost - (cost * 0.1 * nbCurses)));
+        return Math.max(1, (int)(cost * (1 - 0.1 * nbCurses)));
     }
 
     @SubscribeEvent
@@ -143,7 +137,7 @@ public class AnvilEvent {
                     return;
                 }
                 EnchantmentHelper.setEnchantments(finalEnchants, finalStack);
-                cost += getEnchantCost(finalEnchants, firstEnchants, secondEnchants, isEnchantWithSameItem);
+                cost = getEnchantCost(finalEnchants, firstEnchants, secondEnchants, isEnchantWithSameItem);
                 isChanged = true;
             }
 
