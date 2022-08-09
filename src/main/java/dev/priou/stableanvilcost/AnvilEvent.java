@@ -183,6 +183,10 @@ public class AnvilEvent {
             // Rename
             e.setBreakChance(0);
         }
+        if (secondStack.getItem() instanceof DyeItem) {
+            // Rename
+            e.setBreakChance(0);
+        }
         if (firstStack.getItem().isValidRepairItem(firstStack, secondStack)) {
             // Repair
             e.setBreakChance(0);
