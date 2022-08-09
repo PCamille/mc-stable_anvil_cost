@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(AnvilMenu.class)
 public class AnvilZeroCostMixin {
     @Inject(method = "mayPickup", at = @At("HEAD"), cancellable = true)
-    private void mayPickup$allowZeroCost(Player p_39023_, boolean p_39024_, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
+    private void mayPickup$allowZeroCostPickup(Player p_39023_, boolean p_39024_, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
         callbackInfoReturnable.cancel();
 
         AnvilMenu self = (AnvilMenu) (Object) this;
@@ -23,9 +23,8 @@ public class AnvilZeroCostMixin {
     }
 
     @Inject(method = "createResult", at = @At("HEAD"), cancellable = true)
-    public void createResult$ZeroRenameCost(CallbackInfo callbackInfo) {
+    public void createResult$zeroRenameCost(CallbackInfo callbackInfo) {
         AnvilMenu self = (AnvilMenu) (Object) this;
-
         NonNullList<ItemStack> stacks = self.getItems();
         ItemStack firstStack = stacks.get(0);
         ItemStack secondStack = stacks.get(1);
@@ -36,17 +35,20 @@ public class AnvilZeroCostMixin {
         }
 
         String name = self.itemName;
-
-
-        if (name == null || name.isBlank() || name.isEmpty()) {
+        if (name.isBlank() || name.isEmpty()) {
             if (firstStack.hasCustomHoverName()) {
                 finalStack.resetHoverName();
+                self.cost.set(0);
+            } else {
+                return;
             }
-        } else if (!name.equals(firstStack.getHoverName().getString())) {
-            finalStack.setHoverName(new TextComponent(name));
-        }
-        else {
-            return;
+        } else {
+            if (!name.equals(firstStack.getHoverName().getString())) {
+                finalStack.setHoverName(new TextComponent(name).withStyle(finalStack.getHoverName().getStyle()));
+                self.cost.set(0);
+            } else {
+                return;
+            }
         }
 
         callbackInfo.cancel();
