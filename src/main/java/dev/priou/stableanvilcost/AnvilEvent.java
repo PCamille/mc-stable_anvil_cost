@@ -167,9 +167,6 @@ public class AnvilEvent {
         if (isChanged) {
             e.setCost(cost);
             e.setOutput(finalStack);
-        } else {
-            e.setCost(0);
-            e.setOutput(finalStack);
         }
     }
 
