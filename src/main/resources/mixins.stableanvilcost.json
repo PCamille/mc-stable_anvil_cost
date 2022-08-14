@@ -4,7 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "mixins.stableanvilcost.refmap.json",
   "package": "dev.priou.stableanvilcost.mixins",
-  "mixins": ["AnvilZeroCostMixin"],
+  "mixins": ["AnvilZeroCostMixin", "AnvilTooExpensiveCost"],
   "injectors": {
     "defaultRequire": 1
   }
